@@ -12,31 +12,38 @@
             
                     {
                         "name": "REMOTE_Sharp",
-                        "address": "7abd1308-94f3-4eff-a08b-e6f6c18b8101"
+                        "address": "7abd1308-94f3-4eff-a08b-e6f6c18b8101",
+                        "channel":1
                     },
                     {
                         "name": "REMOTE_Moss",
-                        "address": "40865696-7df4-4174-83dc-265afdb001b4"
+                        "address": "40865696-7df4-4174-83dc-265afdb001b4",
+                        "channel": 1
                     },
                     {
                         "name": "REMOTE_Wade",
-                        "address": "9c25a457-2e32-4f21-9e5e-6b88da31f751"
+                        "address": "9c25a457-2e32-4f21-9e5e-6b88da31f751",
+                        "channel": 1
                     },
                     {
                         "name": "REMOTE_Rhodes",
-                        "address": "eae69726-bef1-43a2-97d3-23eec641539f"
+                        "address": "eae69726-bef1-43a2-97d3-23eec641539f",
+                        "channel": 1
                     },
                     {
                         "name": "REMOTE_Reid",
-                        "address": "db20d1a3-cfcf-4a2c-8974-cb4d839a0ade"
+                        "address": "db20d1a3-cfcf-4a2c-8974-cb4d839a0ade",
+                        "channel": 1
                     },
                     {
                         "name": "REMOTE_Hahn",
-                        "address": "2365e0dc-104c-43ab-9f18-0c9ebfcfcd76"
+                        "address": "2365e0dc-104c-43ab-9f18-0c9ebfcfcd76",
+                        "channel": 1
                     },
                     {
                         "name": "REMOTE_Mcneil",
-                        "address": "318e9081-87a1-4fa5-ac2b-c117a79fcf68"
+                        "address": "318e9081-87a1-4fa5-ac2b-c117a79fcf68",
+                        "channel": 1
                     }
                 ]
             });
@@ -47,17 +54,25 @@
             
             console.log("client try to connect to " + device.name);
             setTimeout(function () {
-                clientSocket.socket.emit('bluetooth-connect-device-result', { result: 'connected' });
+                clientSocket.socket.emit('bluetooth-connect-device-result', { connected: true, result: 2 });
             }, 1000);
         });
         clientSocket.socket.on('bluetooth-disconnect-device', function (device) {
                 console.log("client disconnectet from " + device.name);
                 clientSocket.socket.emit('bluetooth-disconnect-device-result', { result: 'disconnected' });
         });
+
+        clientSocket.socket.on('bluetooth-send-device', function (device, data) {
+            //packet: packet.device, packet.data
+            var packageDate = new Date(data.lastUpdate);
+            console.log("receiving packet: ( " + data.lastUpdate + ")" + packageDate.getHours() + ":" + packageDate.getMinutes() + ":" + packageDate.getSeconds() + ":" + packageDate.getMilliseconds() + "sens:" + data.sens + " puissance: " + data.puissance + " angle: " + data.angle);
+            data.middle = new Date().getTime();
+            clientSocket.socket.emit('bluetooth-send-device-result', { result: 1, error: null, result: { start: data.lastUpdate, middle: data.middle, end: new Date().getTime() } });
+        });        
         clientSocket.socket.on('disconnect', function () {
             console.log('client ' + socket.id + ' disconnected');
             //clientSocket.socket.emit('disconnected-result');
-        })
+        });
         clientSocket.socket.emit('connected-result');
     }
     return clientSocket;

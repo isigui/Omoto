@@ -3,10 +3,11 @@ var app = require('express')();
 var routes = require('./routes.js');
 app.use('/', routes);
 var server = require('http').Server(app);
-var io = require('socket.io')(server);
-var bluetoothClient = require('./clientSocket.js');
+var io = require('socket.io')(server, { origins: '*:*' });
 
-server.listen(5000,'','', function () { console.log('listening on port 5000') });
+var bluetoothClient = require('./clientSocket.mock.js');
+
+server.listen(5000, '', '', function () { console.log('listening on port 5000') });
 
 
 

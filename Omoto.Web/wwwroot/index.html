@@ -2,76 +2,66 @@
 <html ng-app="Omoto">
 <head>
     <meta charset="utf-8" />
-    <!--<base href="/">-->
-    <!--
-        Customize the content security policy in the meta tag below as needed. Add 'unsafe-inline' to default-src to enable inline JavaScript.
-        For details, see http://go.microsoft.com/fwlink/?LinkID=617521
-    -->
     <meta http-equiv="Content-Security-Policy">
-    <title>BlankCordovaApp2</title>
-
-
-    <!-- BlankCordovaApp2 references -->
-    <link href="css/index.css" rel="stylesheet" />
-    <!-- Cordova reference, this is added to your app when it's built. -->
-    <!--<script src="cordova.js"></script>-->
-    <script src="scripts/platformOverrides.js"></script>
-    <script src="scripts/jquery/jquery.min.js"></script>
-
-    <script src="scripts/vendors/angular.min.js"></script>
-    <script src="scripts/vendors/angular-resource.min.js"></script>
-    <script src="scripts/vendors/angular-route.min.js"></script>
-    <script src="scripts/vendors/angular-local-storage.js"></script>
-    <script src="scripts/vendors/angular-ui/ui-bootstrap.min.js"></script>
-    <script src="scripts/bootstrap/bootstrap-switch/angular-bootstrap-switch.js"></script>
+    <title>Omoto</title>
     
-    <script src="scripts/vendors/jquery_plugins/jquery.input-ip-address-control-1.0.min.js"></script>
-    <script src="scripts/bootstrap/bootstrap.js"></script>
-    <script src="scripts/bootstrap/bootstrap-switch/bootstrap-switch.js"></script>
-    <script src="scripts/vendors/socket.io/socket.io.js"></script>
-    <script src="scripts/vendors/ngCordova/ng-cordova-mocks.min.js"></script>
+    <!-- bower:css -->
+    <link rel="stylesheet" href="vendor/bootstrap.css"/>
+    <link rel="stylesheet" href="vendor/bootstrap-switch.css"/>
+    <!-- endbower -->
 
-    <script src="scripts/vendors/extensions.js"></script>
-    <!-- entities -->
-    <script src="scripts/entities/robotPacket.js"></script>
-    
-    <!-- Initialize all the modules -->
-    <script src="scripts/app.js"></script>
+    <!-- vendor:css -->
+    <!-- endinject -->
 
-    <!-- Services -->
-    <script src="scripts/services/Mocks/BLEService.js"></script>
-    <script src="scripts/services/Mocks/NodeServerService.js"></script>
-    <!-- Directives -->
-    <script src="scripts/directives/ngIpMask.js"></script>
-    <script src="scripts/directives/bsSwitch.js"></script>
-    <script src="scripts/directives/watchPolar.js"></script>
-    <!--filters-->
-    <script src="scripts/filters/iif.js"></script>
-    <!-- Controllers -->
-    <script src="scripts/controllers/BLEController.js"></script>
-    <script src="scripts/controllers/MainController.js"></script>
-    <script src="scripts/controllers/NavigationController.js"></script>
-    <script src="scripts/controllers/NodeServerController.js"></script>
-    <script src="scripts/controllers/RobotController.js"></script>
-    <script src="scripts/nav.js"></script>    
-    
-    <!--css-->
-    <!-- Bootstrap -->
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css">
-    <link type="text/css" rel="stylesheet" href="css/bootstrap/bootstrap-switch/bootstrap-switch.css"/>
-    <link type="text/css" rel="stylesheet" href="css/header.css" />
-    <link type="text/css" rel="stylesheet" href="css/nav.css" />
-    <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <!-- app:css -->
+     <link href="css/header.css" rel="stylesheet" />
+     <link href="css/nav.css" rel="stylesheet" />
+     <link href="css/style.css" rel="stylesheet" />
+    <!-- endinject -->
+
+    <!--<script src="scripts/platformOverrides.js"></script>-->
+
 </head>
 <body>
     <nav class="navbar" ng-include='"templates/nav.html"'></nav>
-    <!--<header id="intro" ng-include='"templates/header.html"'></header>-->
     <div class="ng-view"></div>
-    <!--<footer ng-include='"templates/footer.html"'></footer>-->
-    <script>
-        $.ready(function () {
-            app.initialize();
-        })
-    </script>
+    <script src="vendor/jquery.js"></script>
+    <!-- bower:js -->
+    <script src="vendor/angular.js"></script>
+    <script src="vendor/bootstrap-switch.js"></script>
+    <script src="vendor/angular-bootstrap-switch.js"></script>
+    <script src="vendor/angular-resource.js"></script>
+    <script src="vendor/angular-route.js"></script>
+    <script src="vendor/angular-local-storage.js"></script>
+    <script src="vendor/socket.io.js"></script>
+    <!-- endbower -->
+
+    <!-- vendor:js -->
+    <!-- endinject -->
+
+    <!-- app:js -->
+    <script src="app/app.js"></script>
+    <script src="app/extensions.js"></script>
+    <script src="app/nav.js"></script>
+    <script src="app/controllers/BLEController.js"></script>
+    <script src="app/controllers/MainController.js"></script>
+    <script src="app/controllers/NavigationController.js"></script>
+    <script src="app/controllers/NodeServerController.js"></script>
+    <script src="app/controllers/RobotController.js"></script>
+    <script src="app/directives/bsSwitch.js"></script>
+    <script src="app/directives/ngIpMask.js"></script>
+    <script src="app/directives/textChange.js"></script>
+    <script src="app/directives/watchPolar.js"></script>
+    <script src="app/entities/robotPacket.js"></script>
+    <script src="app/filters/iif.js"></script>
+    <script src="app/services/BLEService.js"></script>
+    <script src="app/services/Cordova.js"></script>
+    <script src="app/services/NodeServerService.js"></script>
+    <script src="app/services/RobotService.js"></script>
+    <script src="app/services/Mocks/BLEService.js"></script>
+    <script src="app/services/Mocks/NodeServerService.js"></script>
+    <!-- endinject -->
+
+
 </body>
 </html>
