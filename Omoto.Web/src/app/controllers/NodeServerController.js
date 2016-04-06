@@ -5,13 +5,6 @@ angular.module("Omoto").controller("NodeServerController", ['$scope', 'NodeServe
     $scope.publicip = { ip: nodeServerIp.publicIp };
     $scope.port = nodeServerIp.port;
 
-    $scope.testIp = function (ip, port) {
-        ip.testinfo = "checking connection ...";
-        NodeServerService.testIp(ip.ip, port)
-            .then(function (status) {
-                ip.testinfo = status;
-            });
-    };
 
     $scope.canSaveIps = function () {
         return $scope.localip.ip != nodeServerIp.localIp

@@ -17,8 +17,10 @@
     <!--<script src="scripts/platformOverrides.js"></script>-->
 
 </head>
-<body>
-    <nav class="navbar" ng-include='"templates/nav.html"'></nav>
+<body ng-controller="MainController">
+    
+    <nav class="navbar" ng-if="!robot.isConnectedToRobot" ng-include='"templates/nav.html"'></nav>
+    
     <div class="ng-view"></div>
     <script src="vendor/jquery.js"></script>
     <!-- bower:js -->

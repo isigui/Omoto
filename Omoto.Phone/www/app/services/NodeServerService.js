@@ -52,7 +52,7 @@ OmotoModule.factory('NodeServerService', ['$http', '$q', 'localStorageService', 
         else {
             socket.emit('bluetooth-list');
         }
-        
+
     }
     factory.ConnectBluetoothDevice = function (device, callback) {
         factory.ConnectBluetoothDeviceCallback = callback;
@@ -63,21 +63,20 @@ OmotoModule.factory('NodeServerService', ['$http', '$q', 'localStorageService', 
                 });
         }
         else {
-            socket.emit('bluetooth-connect-device',device);
+            socket.emit('bluetooth-connect-device', device);
         }
 
     }
-    factory.SendBluetoothDevice = function(device,data, callback)
-    {
+    factory.SendBluetoothDevice = function (device, data, callback) {
         factory.SendBluetoothDeviceCallback = callback;
         if (socket == null || socket.connected === false) {
             factory.InitializeSocket().then(
                 function () {
-                    socket.emit('bluetooth-send-device',device,data);
+                    socket.emit('bluetooth-send-device', device, data);
                 });
         }
         else {
-            socket.emit('bluetooth-send-device',device, data );
+            socket.emit('bluetooth-send-device', device, data);
         }
     }
     factory.DisconnectBluetoothDevice = function (device, callback) {
@@ -85,11 +84,11 @@ OmotoModule.factory('NodeServerService', ['$http', '$q', 'localStorageService', 
         if (socket == null || socket.connected === false) {
             factory.InitializeSocket().then(
                 function () {
-                    socket.emit('bluetooth-disconnect-device', device);
+                    socket.emit('bluetooth-disconnect-device', { 'device': device });
                 });
         }
         else {
-            socket.emit('bluetooth-disconnect-device', device);
+            socket.emit('bluetooth-disconnect-device', { 'device': device });
         }
     }
     factory.InitializeSocket = function () {
@@ -115,7 +114,7 @@ OmotoModule.factory('NodeServerService', ['$http', '$q', 'localStorageService', 
             socket.on('disconnected-result', function (res) {
                 //factory.DisconnectCallback(res);
             });
-            
+
         });
 
         return self.deferred.promise;

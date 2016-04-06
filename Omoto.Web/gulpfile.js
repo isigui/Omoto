@@ -45,7 +45,6 @@ gulp.task('vendor-css', function () {
 
 
 gulp.task('index', function() {
-    
         return gulp.src(paths.src+'/index.html')
           .pipe(wiredep.stream({
               exclude: [/jquery/],
@@ -82,55 +81,17 @@ gulp.task('index', function() {
     });
 
 gulp.task('copy-app', function () {
-    gulp.src(paths.src + "/**/*")
+    return gulp.src(paths.src + "/**/*")
         .pipe(gulp.dest(paths.dist))
 });
 
-//gulp.task('build-index', function () {
-
-//    gulp.src(paths.src + "/index.html")
-//    .pipe(inject(gulp.src([paths.dist + '/vendor/**/*.js']),
-//    {
-//        name: 'vendor',
-//        addRootSlash: false,
-//        transform: function (filePath, file, i, length) {
-//            return '<script src="' + filePath.replace('wwwroot/','') + '"></script>';
-//        }
-//    }))
-//    .pipe(inject(gulp.src([paths.dist + '/vendor/**/*.css'], { read: false }),
-//    {
-//        name:'vendor',
-//        addRootSlash: false,
-//        transform: function (filePath, file, i, length) {
-//            return ' <link href="' + filePath.replace('wwwroot/', '') + '" rel="stylesheet" />';
-//        }
-//    }))
-//    .pipe(inject(gulp.src([paths.dist + '/app/**/*.js'], { read: false }),
-//    {
-//        name: 'app',
-//        addRootSlash: false,
-//        transform: function (filePath, file, i, length) {
-//            return '<script src="' + filePath.replace('wwwroot/', '') + '"></script>';
-//        }
-//    }))
-//    .pipe(inject(gulp.src([paths.dist + '/css/**/*.css'], { read: false }),
-//    {
-//        name: 'app',
-//        addRootSlash: false,
-//        transform: function (filePath, file, i, length) {
-//            return ' <link href="' + filePath.replace('wwwroot/', '') + '" rel="stylesheet" />';
-//            return 'a';
-//        }
-//    }))
-//    .pipe(gulp.dest(paths.dist));
-
-//});
 gulp.task('fonts', function () {
     return gulp.src([
                     'bower_components/bootstrap/fonts/glyphicons-halflings-regular.*'])
             .pipe(gulp.dest('wwwroot/fonts/'));
 });
-gulp.task('rebuild-all', ['clean-all', 'vendor-scripts', 'vendor-css','fonts','copy-app', 'index']);
+gulp.task('rebuild-all', ['clean-all', 'vendor-scripts', 'vendor-css', 'fonts', 'copy-app', 'index']);
+gulp.task('rebuild-app', ['copy-app', 'index'], function (callback) { console.log('rebuild'); callback(); });
 //gulp.task('watch', function () {
 //    gulp.watch(paths.lib + '/*', ['clean-all', 'copy-vendors', 'copy-app', 'build-index']);
 //    gulp.watch(paths.src + '/*', ['clean-all', 'copy-vendors', 'copy-app', 'build-index']);

@@ -16,14 +16,17 @@
     <!-- app:css -->
      <link href="css/header.css" rel="stylesheet" />
      <link href="css/nav.css" rel="stylesheet" />
+     <link href="css/robot.css" rel="stylesheet" />
      <link href="css/style.css" rel="stylesheet" />
     <!-- endinject -->
 
     <!--<script src="scripts/platformOverrides.js"></script>-->
 
 </head>
-<body>
-    <nav class="navbar" ng-include='"templates/nav.html"'></nav>
+<body ng-controller="MainController">
+    
+    <nav class="navbar" ng-if="!robot.isConnectedToRobot" ng-include='"templates/nav.html"'></nav>
+    
     <div class="ng-view"></div>
     <script src="vendor/jquery.js"></script>
     <!-- bower:js -->
@@ -58,8 +61,7 @@
     <script src="app/services/Cordova.js"></script>
     <script src="app/services/NodeServerService.js"></script>
     <script src="app/services/RobotService.js"></script>
-    <script src="app/services/Mocks/BLEService.js"></script>
-    <script src="app/services/Mocks/NodeServerService.js"></script>
+    <script src="app/services/_SocketHandlerService.js"></script>
     <!-- endinject -->
 
 

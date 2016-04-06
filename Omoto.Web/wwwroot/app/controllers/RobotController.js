@@ -1,91 +1,127 @@
 angular.module("Omoto").controller("RobotController", ['$scope', 'NodeServerService', 'localStorageService', function ($scope, NodeServerService, localStorageService) {
 
+    $scope.info = "";
+    $scope.currentRobotPacket = {};
+    $scope.networkStat = { sent: 0, received: 0, transiting: 0, failed: 0, responseDelayms: 0 };
+    $scope.device = localStorageService.get('bluetooth_device_0');
+    $scope.robotStatus = 0;
+    $scope.video = {on:0};
+    $scope.enableVideoSwitch = true;
+    $scope.videoUrl = "";
+    /*robotStatus
+    0: connect
+    1: connecting
+    2: connected
+    3: disconnecting
+    */
+    var transitingPackets = [];
 
-    $scope.device = null;
-    $scope.isConnected = false;
-    $scope.deviceStatus = 0;
-    $scope.connectStatus = "Connect";
-    $scope.sent = 0;
-    $scope.received = 0;
-    $scope.transitingPackets = [];
-    $scope.input = { angle: 0, puissance: 0, sens: 0,lastUpdate: new Date().getTime()};
-    
-    $scope.$watch(function (scope) {
-
-        return scope.input.angle;
-    }, function (oldValue, newValue) {
-        var time = new Date().getTime();
-        if (time - $scope.input.lastUpdate > 100) {
-            $scope.sent += 1;
-            $scope.send(new robotPacket($scope.input.angle, $scope.input.puissance, $scope.input.sens));
-            $scope.input.lastUpdate = time;
-            
-        }
-        //$scope.$digest();
-    },true);
-    //Gestion du mode de contrôle (distant via serveur node ou direct bluetooth)
-    $scope.isSelected = 1;
-    $scope.$watch('isSelected', function (newValue, oldValue) {
-        $scope.mode = parseInt(newValue);
-        $scope.setControlMode();
-    });
-    $scope.$watch('deviceStatus', function (newValue, oldValue) {
-        switch (newValue) {
-            case 0: $scope.connectStatus = "Connect"; break;
-            case 1: $scope.connectStatus = "Connecting ..."; break;
-            case 2: $scope.connectStatus = "Disconnect"; break;
-            default: $scope.connectStatus = "Connect"; break;
+    $scope.$watch('video.on', function (newValue, oldValue) {
+        if (newValue != oldValue) {
+            var mode = parseInt(newValue);
+            newValue === 1 ? connectToGoPro() : disconnectFromGoPro();
         }
     });
-    $scope.setControlMode = function () {
-        $scope.device = localStorageService.get('bluetooth_device_' + $scope.mode);
-    }
-    $scope.connectDisconnect = function () {
-        if ($scope.isConnected) {
-            $scope.disconnect();
-        }
-        else
-            $scope.connect();
-    }
 
-    //Connexion
-    $scope.canConnect = function () {
+    //Connexion Robot
+    $scope.canConnectToRobot = function () {
         return $scope.device.adress != null;
     }
 
-    $scope.connect = function () {
-        NodeServerService.ConnectBluetoothDevice($scope.device, $scope.onConnectionCallback);
-        $scope.deviceStatus = 1;
+    $scope.connectDisconnectRobot = function () {
+        if ($scope.robot.isConnectedToRobot) {
+            $scope.info = "";
+            disconnectFromRobot();
+        }
+        else {
+            $scope.info = "Connecting to robot ...";
+            connectToRobot();
+        }
     }
 
-    //Deconnexion
-    $scope.canDisconnect = function () {
-        return $scope.device != null && $scope.isConnected;
+    $scope.sendRobotPacket = function (packet) {
+        transitingPackets.push(packet);
+        $scope.networkStat.sent++;
+        $scope.networkStat.transiting = transitingPackets.length;
+        NodeServerService.SendBluetoothDevice($scope.device, packet)
+            .then(onRobotPacketSuccess, onRobotPacketFailure);
     }
 
-    $scope.disconnect = function () {
-        NodeServerService.DisconnectBluetoothDevice($scope.device, $scope.onConnectionCallback);
+    function connectToRobot() {
+        $scope.robotStatus = 1;
+        NodeServerService.ConnectBluetoothDevice($scope.device)
+            .then(onBluetoothConnectionSuccess, onBluetoothConnectionFailure);
     }
-    //Change connetion Callback
-    $scope.onConnectionCallback = function (connectResult) {
-        $scope.isConnected = connectResult.connected;
-        $scope.deviceStatus = parseInt(connectResult.result);
-        $scope.$digest();
+    function disconnectFromRobot() {
+        $scope.robotStatus = 3;
+        NodeServerService.DisconnectBluetoothDevice($scope.device)
+            .then(onBluetoothDisconnectionSuccess, onBluetoothDisconnectionFailure);
     }
 
-    //Send data
-    $scope.send = function (data) {
-        NodeServerService.SendBluetoothDevice($scope.device, data, $scope.onSendCallback);
-        $scope.transitingPackets.push(data);
+
+    function connectToGoPro() {
+        enableVideoSwitch = false;
+        NodeServerService.ConnectGoPro()
+            .then(onGoProConnectionSuccess, onGoProConnectionFailure);
     }
-    $scope.onSendCallback = function (sendResult) {
+    function disconnectFromGoPro() {
+        enableVideoSwitch = false;
+        NodeServerService.ConnectGoPro
+            .then(onGoProDisconnectionSuccess, onGoProDisconnectionFailure);
+    }
+
+
+    //Callbacks
+    function onBluetoothConnectionSuccess(res) {
+        $scope.robotStatus = 2;
+        $scope.robot.isConnectedToRobot = true;
+    }
+    function onBluetoothConnectionFailure(err) {
+        $scope.robotStatus = 0;
+        $scope.robot.isConnectedToRobot = false;
+    }
+
+    function onBluetoothDisconnectionSuccess(disconnectResult) {
+        $scope.robotStatus = 0;
+        $scope.robot.isConnectedToRobot = false;
+    }
+    function onBluetoothDisconnectionFailure(err) {
+        $scope.robotStatus = 2;
+    }
+
+    function onGoProConnectionSuccess(connectResult) {
+        enableVideoSwitch = true;
+        $scope.videoUrl = connectResult.result.videoUrl;
+    }
+    function onGoProConnectionFailure(err) {
+        enableVideoSwitch = true;
+        $scope.videoOn = 0;
+        console.log(err);
+        $scope.videoUrl = "";
+    }
+    function onGoProDisconnectionSuccess(disconnectResult) {
+        enableVideoSwitch = true;
+        $scope.videoUrl = "";
+    }
+    function onGoProDisconnectionFailure(err) {
+        enableVideoSwitch = true;
+        $scope.videoOn = 1;
+        console.log(err);
+    }
+
+    function onRobotPacketSuccess(sendResult) {
         if (sendResult.error == null) {
-            var packetIndex = $scope.transitingPackets.map(function (p) { return p.lastUpdate; }).indexOf(sendResult.result.start);
-            //var packetIndex = $scope.transitingPackets.indexOf(sendResult.start);
-            if (packetIndex >-1) {
-                $scope.received++;
-                $scope.transitingPackets.splice(packetIndex, 1);
+            var packetIndex = transitingPackets.map(function (p) { return p.lastUpdate; }).indexOf(sendResult.result.start);
+            if (packetIndex > -1) {
+                $scope.networkStat.received++;
+                $scope.networkStat.responseDelayms = sendResult.result.end - sendResult.result.start;
+                $scope.currentRobotPacket = transitingPackets[packetIndex];
+                transitingPackets.splice(packetIndex, 1);
+                $scope.networkStat.transiting = transitingPackets.length;
             }
         }
+    };
+    function onRobotPacketFailure(err) {
+        $scope.networkStat.failed++;
     };
 }]);

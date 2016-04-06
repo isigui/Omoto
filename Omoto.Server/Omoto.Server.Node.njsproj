@@ -34,7 +34,10 @@
     <Compile Include="app.js" />
     <Compile Include="clientSocket.js" />
     <Compile Include="clientSocket.mock.js" />
+    <Compile Include="clientGopro.js" />
+    <Compile Include="clientGopro.mock.js" />
     <Compile Include="routes.js" />
+    <Compile Include="StreamCompress.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
   </ItemGroup>
