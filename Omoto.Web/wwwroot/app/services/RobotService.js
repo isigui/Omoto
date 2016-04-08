@@ -13,7 +13,7 @@ Omoto.factory('RobotService', ['$http', '$q', 'localStorageService', 'NodeServer
     }
 
     factory.Connect = function () {
-        NodeServerService.ConnectBluetoothDevice(factory.Device,OnConnectCallback);
+        NodeServerService.connectBluetoothDevice(factory.Device,OnConnectCallback);
     }
 
     factory.OnConnectCallback = function (connectResult) {
@@ -27,7 +27,7 @@ Omoto.factory('RobotService', ['$http', '$q', 'localStorageService', 'NodeServer
     }
 
     factory.Disconnect() = function () {
-        NodeServerService.DisconnectBluetoothDevice(factory.Device, OnDisconnectCallback);
+        NodeServerService.disconnectBluetoothDevice(factory.Device, OnDisconnectCallback);
     }
 
     factory.OnDisconnectCallback = function (disconnectResult) {

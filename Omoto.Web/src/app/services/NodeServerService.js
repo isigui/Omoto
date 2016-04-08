@@ -15,25 +15,25 @@ OmotoModule.factory('NodeServerService', ['SocketHandlerService', 'localStorageS
         localStorageService.set('nodeserver_publicip', publicIp);
         localStorageService.set('nodeserver_port', port);
     }
-    factory.GetBluetoothDeviceList = function () {
+    factory.getBluetoothDeviceList = function () {
         return SocketHandlerService.emit('bluetooth-list');
     }
-    factory.ConnectBluetoothDevice = function (device) {
+    factory.connectBluetoothDevice = function (device) {
         return SocketHandlerService.emit('bluetooth-connect-device', device);
     }
-    factory.SendBluetoothDevice = function (device, data) {
+    factory.sendBluetoothDevice = function (device, data) {
         return SocketHandlerService.emit('bluetooth-send-device', { 'device': device, 'data': data });
     }
-    factory.DisconnectBluetoothDevice = function (device) {
+    factory.disconnectBluetoothDevice = function (device) {
         return SocketHandlerService.emit('bluetooth-disconnect-device', device);
     }
-    factory.ConnectGoPro = function () {
+    factory.connectGoPro = function () {
         return SocketHandlerService.emit('gopro-poweron');
     }
-    factory.DisconnectGoPro = function () {
+    factory.disconnectGoPro = function () {
         return SocketHandlerService.emit('gopro-poweroff');
     }
-    factory.GoProStatus = function () {
+    factory.goProStatus = function () {
         return SocketHandlerService.emit('gopro-status');
     }
 

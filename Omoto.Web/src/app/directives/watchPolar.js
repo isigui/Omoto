@@ -68,7 +68,7 @@ OmotoModule.directive("watchPolar", function () {
             function drawCircle() {
                 ctx.clearRect(0, 0, 2 * controlGear.radius, 2 * controlGear.radius);
                 ctx.beginPath();
-                ctx.strokeStyle = "white";
+                ctx.strokeStyle = "rgba(182, 255, 0, 0.4)";
                 ctx.lineWidth = 20;
                 ctx.arc(controlGear.radius, can.height, controlGear.radius, 0, Math.PI * 2);
                 ctx.stroke();
@@ -79,7 +79,7 @@ OmotoModule.directive("watchPolar", function () {
                 if (isWatching) {
                     //ctx.clear();
                     ctx.beginPath();
-                    ctx.strokeStyle = "red";
+                    ctx.strokeStyle = "rgba(255,0, 0, 0.4)";
                     ctx.lineWidth = 10;
                     teta = Math.acos(Math.min(controlGear.canX, controlGear.radius) / controlGear.radius);
                     hypothenus = Math.min(Math.sqrt(
@@ -119,9 +119,10 @@ OmotoModule.directive("watchPolar", function () {
                 scope.sendRobotPacket(packet);
             }
             function resize() {
-                can.height = window.innerHeight;
-                can.width = window.innerWidth;
-                controlGear.radius = can.width / 8;
+                //can.height = window.innerHeight/4;
+                //can.width = window.innerWidth / 4;
+                //can.top = window.innerHeight * (1-(1/4));
+                controlGear.radius = can.width / 2;
                 controlGear.canX = controlGear.radius / 2;
                 controlGear.canY = 0;
                 drawCircle();

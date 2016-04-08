@@ -1,0 +1,13 @@
+﻿.videoContainer
+{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+
+}
+.up{
+    position:absolute;
+    z-index:1001;
+    top:50px;
+}

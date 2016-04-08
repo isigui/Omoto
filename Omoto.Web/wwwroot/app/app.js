@@ -1,7 +1,29 @@
-var omoto = angular.module('Omoto', ['ngRoute', 'LocalStorageModule', 'frapontillo.bootstrap-switch']);
+var omoto = angular.module('Omoto', ['ngRoute',
+            'LocalStorageModule',
+            'frapontillo.bootstrap-switch',
+            'ngSanitize',
+            'com.2fdevs.videogular',
+			'com.2fdevs.videogular.plugins.controls',
+			'com.2fdevs.videogular.plugins.overlayplay',
+            'com.2fdevs.videogular.plugins.poster',
+            'com.2fdevs.videogular.plugins.hls']);
 
 angular.module('Omoto')
-    .config(['$routeProvider', 'localStorageServiceProvider', function ($routeProvider, localStorageServiceProvider) {
+    .config(['$routeProvider', 'localStorageServiceProvider', '$sceDelegateProvider', '$httpProvider', function ($routeProvider, localStorageServiceProvider, $sceDelegateProvider, $httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common["X-Requested-With"];
+        $httpProvider.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+        $httpProvider.defaults.headers.common["toto"] = "titi";
+        $httpProvider.defaults.withCredentials = true;
+        $sceDelegateProvider.resourceUrlWhitelist([
+        // Allow same origin resource loads.
+        'self',
+        'http://10.5.5.9:8080/live/*',
+        'http://127.0.0.1:5001/**',
+        // Allow loading from our assets domain.  Notice the difference between * and **.
+        //'http://srv*.assets.example.com/**',
+        'http://az29176.vo.msecnd.net/**'
+        ]);
         $routeProvider
             .when('/home',
             {
@@ -9,8 +31,7 @@ angular.module('Omoto')
             })
             .when('/robot',
             {
-                templateUrl: 'templates/robot/robotControl.html',
-                controller: 'RobotController as RobotController'
+                templateUrl: 'templates/robot/robotControl.html'
             })
             .when('/parameters',
             {

@@ -13,7 +13,7 @@ angular.module("Omoto").controller("BLEController", ['$scope', 'localStorageServ
     $scope.GetBluetoothDevices = function (mode) {
         $scope.devices = [];
         $scope.bluetooth_info = "Searching for bluetooth devices ...";
-        BLEService.GetBluetoothDeviceList(mode).then(function (deviceFound) {
+        BLEService.getBluetoothDeviceList(mode).then(function (deviceFound) {
             $scope.bluetooth_info = "";
             deviceFound.forEach(function (device) {
                 $scope.devices.push(device);

@@ -8,6 +8,7 @@
     <!-- bower:css -->
     <link rel="stylesheet" href="vendor/bootstrap.css"/>
     <link rel="stylesheet" href="vendor/bootstrap-switch.css"/>
+    <link rel="stylesheet" href="vendor/videogular.css"/>
     <!-- endbower -->
 
     <!-- vendor:css -->
@@ -18,6 +19,7 @@
      <link href="css/nav.css" rel="stylesheet" />
      <link href="css/robot.css" rel="stylesheet" />
      <link href="css/style.css" rel="stylesheet" />
+     <link href="css/video.css" rel="stylesheet" />
     <!-- endinject -->
 
     <!--<script src="scripts/platformOverrides.js"></script>-->
@@ -30,6 +32,7 @@
     <div class="ng-view"></div>
     <script src="vendor/jquery.js"></script>
     <!-- bower:js -->
+    <script src="vendor/hls.js"></script>
     <script src="vendor/angular.js"></script>
     <script src="vendor/bootstrap-switch.js"></script>
     <script src="vendor/angular-bootstrap-switch.js"></script>
@@ -37,6 +40,14 @@
     <script src="vendor/angular-route.js"></script>
     <script src="vendor/angular-local-storage.js"></script>
     <script src="vendor/socket.io.js"></script>
+    <script src="vendor/require.js"></script>
+    <script src="vendor/angular-sanitize.js"></script>
+    <script src="vendor/videogular.js"></script>
+    <script src="vendor/vg-controls.js"></script>
+    <script src="vendor/vg-buffering.js"></script>
+    <script src="vendor/vg-overlay-play.js"></script>
+    <script src="vendor/vg-poster.js"></script>
+    <script src="vendor/vg-hls.js"></script>
     <!-- endbower -->
 
     <!-- vendor:js -->
@@ -51,17 +62,18 @@
     <script src="app/controllers/NavigationController.js"></script>
     <script src="app/controllers/NodeServerController.js"></script>
     <script src="app/controllers/RobotController.js"></script>
+    <script src="app/controllers/VideoController.js"></script>
     <script src="app/directives/bsSwitch.js"></script>
     <script src="app/directives/ngIpMask.js"></script>
     <script src="app/directives/textChange.js"></script>
     <script src="app/directives/watchPolar.js"></script>
-    <script src="app/entities/robotPacket.js"></script>
     <script src="app/filters/iif.js"></script>
     <script src="app/services/BLEService.js"></script>
     <script src="app/services/Cordova.js"></script>
     <script src="app/services/NodeServerService.js"></script>
     <script src="app/services/RobotService.js"></script>
     <script src="app/services/_SocketHandlerService.js"></script>
+    <script src="app/entities/robotPacket.js"></script>
     <!-- endinject -->
 
 

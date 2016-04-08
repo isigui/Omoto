@@ -46,7 +46,12 @@
 
 #can{
     display:block;
-    background-color:black;
+    background-color:none;
+    position:absolute;
+    z-index:1000;
+    top:75%;
+    height:25%;
+    width:25%;
 }
 
 .robot-header{
@@ -57,3 +62,5 @@
     background-color:rgba(182, 255, 0, 0.4);
     color:white
 }
+
+

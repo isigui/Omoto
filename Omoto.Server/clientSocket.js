@@ -1,5 +1,6 @@
-﻿var bluetoothClient = function (socket, BTSP, GoProClient) {
+﻿var bluetoothClient = function (socket, BTSP) {
     var clientSocket = {};
+    clientSocket.goproClient = require('./clientGopro.js')();
     clientSocket.socket = socket;
     clientSocket.serial = new BTSP.BluetoothSerialPort();
     clientSocket.serial.on('data', function (buffer) {

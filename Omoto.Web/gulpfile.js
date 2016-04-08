@@ -87,8 +87,10 @@ gulp.task('copy-app', function () {
 
 gulp.task('fonts', function () {
     return gulp.src([
-                    'bower_components/bootstrap/fonts/glyphicons-halflings-regular.*'])
+                    'bower_components/bootstrap/fonts/glyphicons-halflings-regular.*'
+    ])
             .pipe(gulp.dest('wwwroot/fonts/'));
+            //.pipe(gulp.src(['bower_components/videogular-themes-default/fonts/*.*']).pipe(gulp.dest('wwwroot/vendor/fonts')));
 });
 gulp.task('rebuild-all', ['clean-all', 'vendor-scripts', 'vendor-css', 'fonts', 'copy-app', 'index']);
 gulp.task('rebuild-app', ['copy-app', 'index'], function (callback) { console.log('rebuild'); callback(); });

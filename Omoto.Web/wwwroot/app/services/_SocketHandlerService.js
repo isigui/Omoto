@@ -2,7 +2,6 @@ var OmotoModule = angular.module("Omoto");
 OmotoModule.factory('SocketHandlerService', ['$http', '$q', function ($http, $q) {
     var factory = {};
     factory.socket;
-    
     factory.promises = [];
     factory.nodeServer = {};
     factory.emit = function (message, data) {

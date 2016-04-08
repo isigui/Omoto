@@ -1,13 +1,13 @@
-﻿var bluetoothClient = function (socket, BTSP, GoProClient) {
+﻿var bluetoothClient = function (socket, BTSP) {
     var clientSocket = {};
     //var GoPro = require('goproh4');
+    clientSocket.goproClient = require('./clientGopro.js')();
     clientSocket.socket = socket;
-    clientSocket.goproClient = new GoProClient();
     clientSocket.handleConnection = function () {
         
         clientSocket.socket.on('bluetooth-list', function (uuid) {
             console.log('client asked bluetooth list');
-            clientSocket.emit('bluetooth-list-result',uuid, {
+            clientSocket.emit('bluetooth-list-result', uuid, {
                 devices: 
  [
             
@@ -52,23 +52,23 @@
 
  
         });
-        clientSocket.socket.on('bluetooth-connect-device', function (uuid,device) {
+        clientSocket.socket.on('bluetooth-connect-device', function (uuid, device) {
             
             console.log("client try to connect to " + device.name);
             setTimeout(function () {
                 clientSocket.emit('bluetooth-connect-device-result', uuid, { connected: true, result: 2 });
             }, 1000);
         });
-        clientSocket.socket.on('bluetooth-disconnect-device', function (uuid,device) {
+        clientSocket.socket.on('bluetooth-disconnect-device', function (uuid, device) {
             console.log("client disconnectet from " + device.name);
             clientSocket.emit('bluetooth-disconnect-device-result', uuid, { connected: false, result: 0 });
         });
-        clientSocket.socket.on('bluetooth-send-device', function (uuid,data) {
+        clientSocket.socket.on('bluetooth-send-device', function (uuid, data) {
             //packet: packet.device, packet.data
             var packageDate = new Date(data.data.lastUpdate);
             console.log("receiving packet: ( " + data.data.lastUpdate + ")" + packageDate.getHours() + ":" + packageDate.getMinutes() + ":" + packageDate.getSeconds() + ":" + packageDate.getMilliseconds() + "sens:" + data.data.sens + " Left Wheel Speed: " + data.data.SpeedLeftWheel.toString() + " Right Wheel Speed: " + data.data.SpeedRightWheel.toString());
             data.data.middle = new Date().getTime();
-            clientSocket.emit('bluetooth-send-device-result',uuid, { result: 1, error: null, result: { start: data.data.lastUpdate, middle: data.data.middle, end: new Date().getTime() } });
+            clientSocket.emit('bluetooth-send-device-result', uuid, { result: 1, error: null, result: { start: data.data.lastUpdate, middle: data.data.middle, end: new Date().getTime() } });
         });
         clientSocket.socket.on('disconnect', function (uuid) {
             console.log('client ' + socket.id + ' disconnected');
@@ -76,16 +76,56 @@
         });
         clientSocket.socket.on('gopro-poweron', function (uuid) {
             console.log('client try to powerOn GoPro');
-            clientSocket.emit('gopro-poweron-result',uuid, { connected: true });
+            clientSocket.goproClient.Status().then(function (status) {
+                if (status.power == "on") {
+                    console.log('gopro already powered on');
+                    clientSocket.emit('gopro-poweron-result', uuid, { 'connected': true, video: { 'on': true, 'status': status, 'url': 'http://az29176.vo.msecnd.net/videocontent/BaliTemple_ShutterstockRF_6930133_1080_HD_FR-FR.mp4', 'format': 'video/mp4' } });
+                }
+                else {
+                    console.log('gopro is '+ status.power+' powering gopro on ...');
+                    clientSocket.goproClient.On().then(function () {
+                        console.log('retrieving status...');
+                        setTimeout(function () {
+                            clientSocket.goproClient.Status()
+                            .then(function (status) {
+                                console.log("status retrieved !");
+
+                                clientSocket.emit('gopro-poweron-result', uuid, { 'connected': true, video: { 'on': true, 'status': status, 'url': 'http://az29176.vo.msecnd.net/videocontent/BaliTemple_ShutterstockRF_6930133_1080_HD_FR-FR.mp4', 'format': 'video/mp4' } });
+                            })
+                            .catch(function (err) { console.log(err); })
+                        }, 8000);
+                    }).catch(function (err) { console.log(err); });
+                }
+            }).catch(function (err) { console.log(err); });
         });
+        
         clientSocket.socket.on('gopro-poweroff', function (uuid) {
             console.log('client try to powerOff GoPro');
-            clientSocket.emit('gopro-poweroff-result',uuid, { disconnected: true });
-
+            clientSocket.goproClient.Status().then(function (status) {
+                if (status.power == "off") {
+                    console.log('gopro already powered off');
+                    clientSocket.emit('gopro-poweroff-result', uuid, { 'connected': false, video: { 'on': false, 'status': status, 'url': '', 'format': '' } });
+                }
+                else {
+                    console.log('gopro is '+status.power+' powering gopro off ...');
+                    clientSocket.goproClient.Off().then(function () {
+                        console.log('retrieving status...');
+                        setTimeout(function () {
+                            clientSocket.goproClient.Status()
+                            .then(function (status) { clientSocket.emit('gopro-poweroff-result', uuid, { 'connected': false, video: { 'on': false, 'status': status, 'url': '', 'format': '' } }); })
+                            .catch(function (err) { console.log(err); })
+                        }, 8000);
+                    }).catch(function (err) { console.log(err); });
+                }
+            }).catch(function (err) { console.log(err); });
         });
+
         clientSocket.socket.on('gopro-status', function (uuid) {
             console.log('client try to get GoPro status');
-            clientSocket.emit('gopro-status-result',uuid, { 'ok': true, 'result': '' });
+            clientSocket.goproClient.Status().then(function (status) {
+                console.log("go pro status: " + status);
+                clientSocket.emit('gopro-status-result', uuid, { 'ok': true, 'result': '' });
+            });
         });
         clientSocket.socket.emit('connected-result');
     }

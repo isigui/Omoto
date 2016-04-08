@@ -2,6 +2,9 @@
   "version": "1.0.0",
   "name": "ASP.NET",
   "private": true,
+  "dependencies": {
+    
+  },
   "devDependencies": {
     "gulp": "3.8.11",
     "gulp-angular-filesort": "^1.1.1",

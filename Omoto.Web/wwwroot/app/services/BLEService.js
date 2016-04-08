@@ -3,7 +3,7 @@ angular.module("Omoto").factory('BLEService', ['$timeout', '$q', 'NodeServerServ
 
     'use strict';
     var factory = {};
-    factory.GetBluetoothDeviceList = function (mode) {
+    factory.getBluetoothDeviceList = function (mode) {
         var deffered = $q.defer();
         if (mode === 0) {
 
@@ -46,7 +46,7 @@ angular.module("Omoto").factory('BLEService', ['$timeout', '$q', 'NodeServerServ
             }, 2000);
         }
         else {
-            NodeServerService.GetBluetoothDeviceList(function (devices) {
+            NodeServerService.getBluetoothDeviceList(function (devices) {
                 factory.onDeviceListSuccess(devices);
                 deffered.resolve(devices);
             })
@@ -72,7 +72,7 @@ angular.module("Omoto").factory('BLEService', ['$timeout', '$q', 'NodeServerServ
         }
         else
         {
-            NodeServerService.DisconnectBluetoothDevice(device,function (res) {
+            NodeServerService.disconnectBluetoothDevice(device,function (res) {
                 deffered.resolve(res);
             });
         }
@@ -87,7 +87,7 @@ angular.module("Omoto").factory('BLEService', ['$timeout', '$q', 'NodeServerServ
             }, 2000);
         }
         else {
-            NodeServerService.ConnectBluetoothDevice(device, function (res) {
+            NodeServerService.connectBluetoothDevice(device, function (res) {
                 deffered.resolve(res);
             });
         }

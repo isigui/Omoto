@@ -5,9 +5,9 @@ angular.module("Omoto").controller("RobotController", ['$scope', 'NodeServerServ
     $scope.networkStat = { sent: 0, received: 0, transiting: 0, failed: 0, responseDelayms: 0 };
     $scope.device = localStorageService.get('bluetooth_device_0');
     $scope.robotStatus = 0;
-    $scope.video = {on:0};
-    $scope.enableVideoSwitch = true;
-    $scope.videoUrl = "";
+
+
+
     /*robotStatus
     0: connect
     1: connecting
@@ -16,12 +16,7 @@ angular.module("Omoto").controller("RobotController", ['$scope', 'NodeServerServ
     */
     var transitingPackets = [];
 
-    $scope.$watch('video.on', function (newValue, oldValue) {
-        if (newValue != oldValue) {
-            var mode = parseInt(newValue);
-            newValue === 1 ? connectToGoPro() : disconnectFromGoPro();
-        }
-    });
+ 
 
     //Connexion Robot
     $scope.canConnectToRobot = function () {
@@ -43,31 +38,19 @@ angular.module("Omoto").controller("RobotController", ['$scope', 'NodeServerServ
         transitingPackets.push(packet);
         $scope.networkStat.sent++;
         $scope.networkStat.transiting = transitingPackets.length;
-        NodeServerService.SendBluetoothDevice($scope.device, packet)
+        NodeServerService.sendBluetoothDevice($scope.device, packet)
             .then(onRobotPacketSuccess, onRobotPacketFailure);
     }
 
     function connectToRobot() {
         $scope.robotStatus = 1;
-        NodeServerService.ConnectBluetoothDevice($scope.device)
+        NodeServerService.connectBluetoothDevice($scope.device)
             .then(onBluetoothConnectionSuccess, onBluetoothConnectionFailure);
     }
     function disconnectFromRobot() {
         $scope.robotStatus = 3;
-        NodeServerService.DisconnectBluetoothDevice($scope.device)
+        NodeServerService.disconnectBluetoothDevice($scope.device)
             .then(onBluetoothDisconnectionSuccess, onBluetoothDisconnectionFailure);
-    }
-
-
-    function connectToGoPro() {
-        enableVideoSwitch = false;
-        NodeServerService.ConnectGoPro()
-            .then(onGoProConnectionSuccess, onGoProConnectionFailure);
-    }
-    function disconnectFromGoPro() {
-        enableVideoSwitch = false;
-        NodeServerService.ConnectGoPro
-            .then(onGoProDisconnectionSuccess, onGoProDisconnectionFailure);
     }
 
 
@@ -89,25 +72,7 @@ angular.module("Omoto").controller("RobotController", ['$scope', 'NodeServerServ
         $scope.robotStatus = 2;
     }
 
-    function onGoProConnectionSuccess(connectResult) {
-        enableVideoSwitch = true;
-        $scope.videoUrl = connectResult.result.videoUrl;
-    }
-    function onGoProConnectionFailure(err) {
-        enableVideoSwitch = true;
-        $scope.videoOn = 0;
-        console.log(err);
-        $scope.videoUrl = "";
-    }
-    function onGoProDisconnectionSuccess(disconnectResult) {
-        enableVideoSwitch = true;
-        $scope.videoUrl = "";
-    }
-    function onGoProDisconnectionFailure(err) {
-        enableVideoSwitch = true;
-        $scope.videoOn = 1;
-        console.log(err);
-    }
+
 
     function onRobotPacketSuccess(sendResult) {
         if (sendResult.error == null) {
@@ -124,4 +89,6 @@ angular.module("Omoto").controller("RobotController", ['$scope', 'NodeServerServ
     function onRobotPacketFailure(err) {
         $scope.networkStat.failed++;
     };
+
+    
 }]);
